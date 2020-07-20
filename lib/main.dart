@@ -16,10 +16,10 @@ void main() {
         FutureProvider<List<User>>(
             create: (_) => di.dependency<UserService>().getUserList()),
         ChangeNotifierProvider<ValueNotifier<User>>(
-          create: (_) => ValueNotifier<User>(null),
+          create: (_) => di.dependency<ValueNotifier<User>>(),
         ),
         ChangeNotifierProxyProvider<ValueNotifier<User>, TodolistViewmodel>(
-            create: (_) => TodolistViewmodel(),
+            create: (_) => di.dependency<TodolistViewmodel>(),
             update: (_, userNotifier, todoListNotifier) =>
                 todoListNotifier..user = userNotifier.value),
       ],
