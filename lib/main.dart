@@ -6,6 +6,7 @@ import 'app/router.dart' as router;
 import 'services/user/user_service.dart';
 import 'models/user.dart';
 import 'screens/todolist/todolist_viewmodel.dart';
+import 'screens/login/login_viewmodel.dart';
 
 void main() {
   di.init();
@@ -15,13 +16,13 @@ void main() {
       providers: [
         FutureProvider<List<User>>(
             create: (_) => di.dependency<UserService>().getUserList()),
-        ChangeNotifierProvider<ValueNotifier<User>>(
-          create: (_) => di.dependency<ValueNotifier<User>>(),
+        ChangeNotifierProvider.value(
+          value: di.dependency<LoginViewmodel>(),
         ),
-        ChangeNotifierProxyProvider<ValueNotifier<User>, TodolistViewmodel>(
+        ChangeNotifierProxyProvider<LoginViewmodel, TodolistViewmodel>(
             create: (_) => di.dependency<TodolistViewmodel>(),
-            update: (_, userNotifier, todoListNotifier) =>
-                todoListNotifier..user = userNotifier.value),
+            update: (_, loginViewmodel, todolistViewmodel) =>
+                todolistViewmodel..user = loginViewmodel.user),
       ],
       child: MaterialApp(
         title: 'MVVM Setup',

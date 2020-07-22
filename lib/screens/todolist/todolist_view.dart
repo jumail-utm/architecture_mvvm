@@ -1,9 +1,10 @@
+import 'package:architecture_provider/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/user.dart';
 import 'todolist_viewmodel.dart';
-import '../login/login_view.dart';
+import '../login/login_viewmodel.dart';
+import '../../app/router.dart' as router;
 
 class TodolistScreen extends StatelessWidget {
   static Route<dynamic> route() =>
@@ -11,38 +12,16 @@ class TodolistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<ValueNotifier<User>>(context, listen: false).value;
-
     return Scaffold(
-      appBar: AppBar(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.avatar),
-        ),
-        title: Text(user.name),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.highlight_off, // highlight_off, touch_app
-                color: Colors.red,
-                size: 40),
-            onPressed: () {
-              Provider.of<ValueNotifier<User>>(context, listen: false).value =
-                  null;
-              Navigator.pushReplacement(
-                context,
-                LoginScreen.route(),
-              );
-            },
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(context),
       body: Selector<TodolistViewmodel, int>(
-        selector: (_, todoListNotifier) => todoListNotifier.todos?.length,
+        selector: (_, todolistViewmodel) => todolistViewmodel.todos?.length,
         builder: (context, _, __) {
           print('-' * 20);
 
-          final todoListNotifier =
+          final todolistViewmodel =
               Provider.of<TodolistViewmodel>(context, listen: false);
-          final todos = todoListNotifier?.todos;
+          final todos = todolistViewmodel?.todos;
           if (todos == null) {
             return Center(child: CircularProgressIndicator());
           }
@@ -71,8 +50,8 @@ class TodolistScreen extends StatelessWidget {
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none)),
                     subtitle: Text('id:  ${todo.id}'),
-                    onTap: () => todoListNotifier.toggleTodoStatus(index),
-                    onLongPress: () => todoListNotifier.removeTodo(index),
+                    onTap: () => todolistViewmodel.toggleTodoStatus(index),
+                    onLongPress: () => todolistViewmodel.removeTodo(index),
                   );
                 },
               );
@@ -85,6 +64,32 @@ class TodolistScreen extends StatelessWidget {
         onPressed: () =>
             Provider.of<TodolistViewmodel>(context, listen: false).addNewTodo(),
       ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    final user = Provider.of<LoginViewmodel>(context, listen: false).user;
+
+    return AppBar(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(user.avatar),
+      ),
+      title: Text(user.name),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.highlight_off, // highlight_off, touch_app
+              color: Colors.red,
+              size: 40),
+          onPressed: () {
+            Provider.of<LoginViewmodel>(context, listen: false)
+                .selectUser(null);
+            Navigator.pushReplacementNamed(
+              context,
+              router.loginRoute,
+            );
+          },
+        ),
+      ],
     );
   }
 }

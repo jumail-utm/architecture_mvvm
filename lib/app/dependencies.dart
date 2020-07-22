@@ -7,7 +7,7 @@ import '../services/todo/todo_service_rest.dart';
 import '../services/user/user_service.dart';
 import '../services/user/user_service_rest.dart';
 import '../screens/todolist/todolist_viewmodel.dart';
-import '../models/user.dart';
+import '../screens/login/login_viewmodel.dart';
 
 GetIt dependency = GetIt.instance;
 
@@ -18,6 +18,6 @@ void init() {
   dependency.registerLazySingleton<UserService>(() => UserServiceRest());
 
   // Viewmodels
-  dependency.registerLazySingleton(() => ValueNotifier<User>(null));
+  dependency.registerLazySingleton(() => LoginViewmodel());
   dependency.registerLazySingleton(() => TodolistViewmodel());
 }
