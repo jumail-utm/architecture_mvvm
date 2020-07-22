@@ -17,12 +17,6 @@ class LoginScreen extends StatelessWidget {
       body: View<LoginViewmodel>(
         initViewmodel: (viewmodel) => viewmodel.getUserList(),
         builder: (context, viewmodel, _) {
-          if (viewmodel.busy) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
           final users = viewmodel.users;
 
           return ListView.separated(

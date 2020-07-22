@@ -19,9 +19,19 @@ class View<T extends Viewmodel> extends StatelessWidget {
     return viewmodel;
   }
 
+  Widget _builder(BuildContext context, T viewmodel, Widget child) {
+    if (viewmodel.busy) {
+      return Center(
+        child: Scaffold(body: Center(child: CircularProgressIndicator())),
+      );
+    }
+
+    return builder(context, viewmodel, child);
+  }
+
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
         value: _setupViewmodel(),
-        child: Consumer<T>(builder: builder),
+        child: Consumer<T>(builder: _builder),
       );
 }

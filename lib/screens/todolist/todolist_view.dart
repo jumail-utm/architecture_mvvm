@@ -21,10 +21,6 @@ class TodolistScreen extends StatelessWidget {
         builder: (context, todolistViewmodel, __) {
           print('-' * 20);
 
-          if (todolistViewmodel.busy) {
-            return Center(child: CircularProgressIndicator());
-          }
-
           final todos = todolistViewmodel.todos;
 
           return ListView.separated(
