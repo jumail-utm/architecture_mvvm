@@ -15,9 +15,11 @@ class TodolistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: View<TodolistViewmodel>(
-        initViewmodel: (viewmodel) =>
-            viewmodel.user = dependency<LoginViewmodel>().user,
+      body: SelectorView<TodolistViewmodel, int>(
+        initViewmodel: (todolistViewmodel) =>
+            todolistViewmodel.user = dependency<LoginViewmodel>().user,
+        selector: (_, todolistViewmodel) =>
+            todolistViewmodel.busy ? 0 : todolistViewmodel.todos.length,
         builder: (context, todolistViewmodel, __) {
           print('-' * 20);
 
@@ -30,13 +32,14 @@ class TodolistScreen extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               return Selector<TodolistViewmodel, bool>(
-                selector: (_, todolistViewmodel) =>
-                    todolistViewmodel.todos[index].completed,
+                selector: (_, todolistViewmodel) => todolistViewmodel.busy
+                    ? null
+                    : todolistViewmodel.todos[index].completed,
                 builder: (_, __, ___) {
                   final todo = dependency<TodolistViewmodel>().todos[index];
 
                   // To show which ListTile gets rebuilt
-                  print('Build ListTile ${index + 1}');
+                  print('Build ListTile ${index + 1} - ${todo.completed}');
 
                   return ListTile(
                     title: Text(todo.title,
@@ -61,28 +64,30 @@ class TodolistScreen extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    final user = dependency<LoginViewmodel>().user;
-
-    return AppBar(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(user.avatar),
-      ),
-      title: Text(user.name),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.highlight_off, // highlight_off, touch_app
-              color: Colors.red,
-              size: 40),
-          onPressed: () {
-            dependency<LoginViewmodel>().selectUser(null);
-            Navigator.pushReplacementNamed(
-              context,
-              router.loginRoute,
-            );
-          },
-        ),
-      ],
-    );
+  Widget _buildAppBar(BuildContext context) {
+    return PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: WidgetView<LoginViewmodel>(
+            builder: (_, viewmodel, __) => AppBar(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(viewmodel.user.avatar),
+                  ),
+                  title: Text(viewmodel.user.name),
+                  actions: <Widget>[
+                    IconButton(
+                      icon:
+                          Icon(Icons.highlight_off, // highlight_off, touch_app
+                              color: Colors.red,
+                              size: 40),
+                      onPressed: () {
+                        viewmodel.selectUser(null);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          router.loginRoute,
+                        );
+                      },
+                    ),
+                  ],
+                )));
   }
 }

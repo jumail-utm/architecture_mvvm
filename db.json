@@ -10,7 +10,7 @@
       "id": 2,
       "userId": 1,
       "title": "Replace light bulb",
-      "completed": false
+      "completed": true
     },
     {
       "id": 3,
@@ -28,7 +28,7 @@
       "id": 5,
       "userId": 1,
       "title": "Setup online meeting room",
-      "completed": true
+      "completed": false
     },
     {
       "id": 10,

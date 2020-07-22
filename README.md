@@ -1,4 +1,4 @@
-# architecture_provider
+# architecture_mvvm
 
 To run the app using the Local REST API JSON Server
 
