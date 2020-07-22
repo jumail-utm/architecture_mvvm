@@ -4,14 +4,24 @@ import '../app/dependencies.dart';
 import 'viewmodel.dart';
 
 class View<T extends Viewmodel> extends StatelessWidget {
-  final Widget Function(BuildContext context, Viewmodel viewmodel, Widget child)
+  final Widget Function(BuildContext context, T viewmodel, Widget child)
       builder;
 
-  View({this.builder});
+  final void Function(T viewmodel) initViewmodel;
+
+  View({this.builder, this.initViewmodel});
+
+  T _setupViewmodel() {
+    final viewmodel = dependency<T>();
+    if (initViewmodel != null) {
+      initViewmodel(viewmodel);
+    }
+    return viewmodel;
+  }
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
-        value: dependency<T>(),
+        value: _setupViewmodel(),
         child: Consumer<T>(builder: builder),
       );
 }
