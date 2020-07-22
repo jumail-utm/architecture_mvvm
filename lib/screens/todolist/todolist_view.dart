@@ -1,10 +1,10 @@
-import 'package:architecture_provider/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'todolist_viewmodel.dart';
 import '../login/login_viewmodel.dart';
 import '../../app/router.dart' as router;
+import '../../app/dependencies.dart';
 
 class TodolistScreen extends StatelessWidget {
   static Route<dynamic> route() =>
@@ -68,7 +68,8 @@ class TodolistScreen extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final user = Provider.of<LoginViewmodel>(context, listen: false).user;
+    // final user = Provider.of<LoginViewmodel>(context, listen: false).user;
+    final user = dependency<LoginViewmodel>().user;
 
     return AppBar(
       leading: CircleAvatar(
