@@ -1,18 +1,19 @@
-import 'package:flutter/foundation.dart';
 import '../../app/dependencies.dart';
 
 import '../../services/user/user_service.dart';
+import '../viewmodel.dart';
 import '../../models/user.dart';
 
-class LoginViewmodel extends ChangeNotifier {
+class LoginViewmodel extends Viewmodel {
   List<User> users;
   int _selected;
   UserService get dataService => dependency();
 
   void getUserList() async {
+    turnBusy();
     users = await dataService.getUserList();
     _selected = null;
-    notifyListeners();
+    turnIdle();
   }
 
   User get user =>
@@ -20,6 +21,6 @@ class LoginViewmodel extends ChangeNotifier {
 
   void selectUser(int index) {
     _selected = index;
-    notifyListeners();
+    turnIdle(); // Only to call to notifyListneres()
   }
 }
