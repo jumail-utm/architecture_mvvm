@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../app/dependencies.dart';
 import '../view.dart';
 import 'login_viewmodel.dart';
 import '../../app/router.dart' as router;
 
-class LoginScreen extends View {
+class LoginScreen extends StatelessWidget {
   static Route<dynamic> route() =>
       MaterialPageRoute(builder: (_) => LoginScreen());
 
@@ -17,14 +15,15 @@ class LoginScreen extends View {
         title: Text('Choose a user to login as'),
       ),
       body: View<LoginViewmodel>(
+        initViewmodel: (viewmodel) => viewmodel.getUserList(),
         builder: (context, viewmodel, _) {
-          final users = viewmodel.users;
-
-          if (users == null) {
+          if (viewmodel.busy) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
+
+          final users = viewmodel.users;
 
           return ListView.separated(
             itemCount: users.length,
